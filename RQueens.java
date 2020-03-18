@@ -27,7 +27,35 @@ class RQueens{
         10.             remove the queen from that square
         11. return the accumulated sum*/
     static int findSolutions(int[][] B, int i, String mode){
-        return i;
+        //printWholeBoard(B);
+        int sum = 0;
+        if(i == B.length) {
+            //if(mode == "-v") printBoard([][] B);
+            return 1;
+        } else {
+            for(int j = 1; j < B.length; ++j) {
+                if(B[i][j] == 0) {
+                    placeQueen(B, j, i);
+                    sum += findSolutions(B, i+1, mode);
+                    removeQueen(B, j, i);
+                }
+            }
+        }
+        //System.out.println("sum: "+ sum);
+        return sum;
+    }
+
+    // printWholeBoard(B)
+    // function that allows me to see the whole board
+    // runs at ^2 time so is used for testing and not for functionality
+    static void printWholeBoard(int[][] B) {
+        for(int i = 1; i <= B.length - 1; ++i){
+            System.out.print("(");
+            for(int j = 1; j < B.length - 1; ++j){
+                System.out.print(B[i][j] + ",");
+            }
+            System.out.println(B[i][B.length-1] + ")");
+        }
     }
 
     /*prints out a solution to n-queens in the format described*/
@@ -43,14 +71,26 @@ class RQueens{
     the existence of a queen on square (i,j). It will also decrement B[k][l] for every square (k, l) under attack
     from the new queen at (i,j), where i < k ≤ n and 1 ≤ l ≤ n*/
     static void placeQueen(int[][] B,int j, int i){
-
+        B[i][j]++;
+        B[i][0] = j;
+        for(int k=i+1; k < B.length; ++k){
+            for(int l = 1;l < B.length; ++l){
+                if(l==j || Math.abs(l-j) == Math.abs(k-i)) B[k][l]--;
+            }
+        }
     }
 
     /*decrements B[i][j] from 1 to 0, resets B[i][0] from j to 0, and increments B[k][l]
     for every square (k, l) no longer under attack from the now absent queen at (i,j), where i < k ≤ n and
     1 ≤ l ≤ n*/
     static void removeQueen(int[][] B,int j, int i){
-
+        B[i][j]--;
+        B[i][0] = 0;
+        for(int k=i+1; k < B.length; ++k){
+            for(int l = 1;l < B.length; ++l){
+                if(l==j || Math.abs(l-j) == Math.abs(k-i)) B[k][l]++;
+            }
+        }
     }
 
     static void printErr(){
@@ -64,8 +104,12 @@ class RQueens{
     zeros, call function findSolutions() on this array in the correct mode, then print out the number of
     solutions to n-queens that were found*/
     public static void main(String args[]){
-        int n = 4;
+        int n = 14;
         int[][] B = new int[n+1][n+1];
-        printBoard(B);
+        //printBoard(B);
+        //printWholeBoard(B);
+        //System.out.println(B.length);
+        System.out.println(findSolutions(B, 1, ""));
+        //printWholeBoard(B);
     }
 }
