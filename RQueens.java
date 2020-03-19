@@ -4,8 +4,6 @@
 // Tristan Clark
 //------------------------------------------------------------------------------------------------------------------
 
-// imports
-
 class RQueens{
 
     /*implements the recursive algorithm we have been describing. If the string argument mode has the value
@@ -30,7 +28,7 @@ class RQueens{
         //printWholeBoard(B);
         int sum = 0;
         if(i == B.length) {
-            //if(mode == "-v") printBoard([][] B);
+            if(mode == "-v") printBoard(B);
             return 1;
         } else {
             for(int j = 1; j < B.length; ++j) {
@@ -94,7 +92,7 @@ class RQueens{
     }
 
     static void printErr(){
-        System.err.println("Usage: Queens [-v] number");
+        System.err.println("Usage: RQueens [-v] number");
         System.err.println("Option: -v  verbose output, print all solutions");
         System.exit(0);
     }
@@ -104,12 +102,36 @@ class RQueens{
     zeros, call function findSolutions() on this array in the correct mode, then print out the number of
     solutions to n-queens that were found*/
     public static void main(String args[]){
-        int n = 14;
-        int[][] B = new int[n+1][n+1];
-        //printBoard(B);
-        //printWholeBoard(B);
-        //System.out.println(B.length);
-        System.out.println(findSolutions(B, 1, ""));
-        //printWholeBoard(B);
+        int n, sol, arglen = args.length;
+        int[][] B;
+
+        //System.out.println(arglen);
+
+        //System.out.println(args[0]);
+
+        if(arglen == 2) {
+            if(!args[0].startsWith("-v")){
+                printErr();
+            }
+            try{
+                n = Integer.parseInt(args[1]);
+                B = new int[n+1][n+1];
+                sol = findSolutions(B, 1, "-v");
+                System.out.println(n + "-Queens has " + sol + " solutions");
+            } catch(NumberFormatException e1) {
+                printErr();
+            }
+        } else if(arglen == 1) {
+            try{
+                n = Integer.parseInt(args[0]);
+                B = new int[n+1][n+1];
+                sol = findSolutions(B, 1, "");
+                System.out.println(n + "-Queens has " + sol + " solutions");
+            } catch (NumberFormatException e2) {
+                printErr();
+            }
+        } else {
+            printErr();
+        }
     }
 }
